@@ -49,9 +49,9 @@ class runge_kutta:
 
 
 
-    def h_prime(self, h, goal, i, j):
-        #optimus prime
-        return h * (30 * h * goal /abs(i-j))**0.25
+    # def h_prime(self, h, goal, i, j):
+    #     #optimus prime
+    #     return h * (30 * h * goal /abs(i-j))**0.25
     
 
 
@@ -87,14 +87,15 @@ class runge_kutta:
             self.vzpoints.append(self.cond_init[5])
 
             k1, k2, k3, k4 = self.runge_kutta(self.h)
-            temp_cond_in_normal = self.cond_init + (k1+2*k2+2*k3+k4)/6
+            # temp_cond_in_normal = self.cond_init + (k1+2*k2+2*k3+k4)/6
+            self.cond_init += (k1+2*k2+2*k3+k4)/6
 
-            k1, k2, k3, k4 = self.runge_kutta(2*self.h)
-            temp_cond_in_doublé = self.cond_init + (k1+2*k2+2*k3+k4)/6
+            # k1, k2, k3, k4 = self.runge_kutta(2*self.h)
+            # temp_cond_in_doublé = self.cond_init + (k1+2*k2+2*k3+k4)/6
 
 
-            # Prendre l'élément 0, 2, 4 pour les positions
-            h_prime = self.h_prime(self.h, 2000, temp_cond_in_normal, temp_cond_in_doublé)
+            # # Prendre l'élément 0, 2, 4 pour les positions
+            # h_prime = self.h_prime(self.h, 2000, temp_cond_in_normal, temp_cond_in_doublé)
 
 
 
