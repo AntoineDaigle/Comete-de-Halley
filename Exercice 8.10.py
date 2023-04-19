@@ -23,7 +23,6 @@ class runge_kutta:
         self.b = b 
         self.N = N 
         self.h = (self.b-self.a)/self.N
-        self.x = cond_init
         self.cond_init = cond_init
         self.tpoints = np.arange(self.a,self.b,self.h)
 
@@ -50,8 +49,22 @@ class runge_kutta:
 
 
 
+    def h_prime(self, h, goal, i, j):
+        #optimus prime
+        return h * (30 * h * goal /abs(i-j))**0.25
+    
 
-    def runge_kutta(self):
+
+    def runge_kutta(self, h):
+        k1 = h * self.f(self.cond_init)
+        k2 = h * self.f(self.cond_init+0.5*k1)
+        k3 = h * self.f(self.cond_init+0.5*k2)
+        k4 = h * self.f(self.cond_init+k3)
+        return k1, k2, k3, k4
+        
+
+
+    def simulation(self):
         """Méthode de Runge-Kutta."""
         self.xpoints = []
         self.vxpoints = []
@@ -60,37 +73,52 @@ class runge_kutta:
         self.zpoints = []
         self.vzpoints = []
 
+        delta = 2000
+        # self.cond_ini
+
         for t in tqdm(self.tpoints):
-            self.xpoints.append(self.x[0])
-            self.vxpoints.append(self.x[1])
+            self.xpoints.append(self.cond_init[0])
+            self.vxpoints.append(self.cond_init[1])
 
-            self.ypoints.append(self.x[2])
-            self.vypoints.append(self.x[3])
+            self.ypoints.append(self.cond_init[2])
+            self.vypoints.append(self.cond_init[3])
             
-            self.zpoints.append(self.x[4])
-            self.vzpoints.append(self.x[5])
+            self.zpoints.append(self.cond_init[4])
+            self.vzpoints.append(self.cond_init[5])
 
-            k1 = self.h * self.f(self.x)
-            k2 = self.h * self.f(self.x+0.5*k1)
-            k3 = self.h * self.f(self.x+0.5*k2)
-            k4 = self.h * self.f(self.x+k3)
-            self.x += (k1+2*k2+2*k3+k4)/6
+            k1, k2, k3, k4 = self.runge_kutta(self.h)
+            temp_cond_in_normal = self.cond_init + (k1+2*k2+2*k3+k4)/6
+
+            k1, k2, k3, k4 = self.runge_kutta(2*self.h)
+            temp_cond_in_doublé = self.cond_init + (k1+2*k2+2*k3+k4)/6
+
+
+            # Prendre l'élément 0, 2, 4 pour les positions
+            h_prime = self.h_prime(self.h, 2000, temp_cond_in_normal, temp_cond_in_doublé)
+
+
+
+
+
 
         return self.tpoints, self.xpoints, self.vxpoints, self.ypoints, self.vypoints, self.zpoints, self.vzpoints
-    
+
 
 
 if __name__ == "__main__":
-    t, x, vx, y, vy, z, vz = runge_kutta(0, 2e9, 100000, [4e12, 0, 0, 400, 0, 300]).runge_kutta()
+    t, x, vx, y, vy, z, vz = runge_kutta(0, 2e9, 100000, [4e12, 0, 0, 500, 0, 0]).simulation()
 
 
     fig = plt.figure()
-    ax = plt.axes(projection='3d')
+    ax = plt.axes()
+    # ax = plt.axes(projection='3d')
 
-    ax.plot3D(x, y, z)
-    ax.scatter(0, 0, 0, label="Soleil")
+    # ax.plot(t, x, label="x")
+    # ax.plot(t, y, label="y")
+    ax.plot(x, y)
+    ax.scatter(0, 0, c="red", label="Soleil")
     ax.set_xlabel("x [m]")
     ax.set_ylabel("y [m]")
-    ax.set_zlabel("z [m]")
+    # ax.set_zlabel("z [m]")
     plt.legend()
     plt.show()
