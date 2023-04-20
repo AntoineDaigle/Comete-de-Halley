@@ -137,7 +137,7 @@ class runge_kutta:
 
 
 if __name__ == "__main__":
-    t, x, vx, y, vy, z, vz, h = runge_kutta(0, 2e9, 1E05, [4e12, 0, 0, 500, 0, 0], 1E-06).simulation()
+    t, x, vx, y, vy, z, vz, h = runge_kutta(0, 2e9, 1E05, [4e12, 0, 0, 500, 0, 0], 1E-08).simulation()
 
     plt.plot(t, h)
     plt.show()
