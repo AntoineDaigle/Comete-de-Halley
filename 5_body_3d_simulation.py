@@ -292,7 +292,7 @@ if __name__ == "__main__":
     y_Ter = x_and_v_points[3][2] / astronomical_unit
     z_Ter = x_and_v_points[3][4] / astronomical_unit
     
-    nb_points = 10000
+    nb_points = 500
     t_interp = np.linspace(t[0], t[-1], nb_points)
     
     x_Hal_interp = np.interp(t_interp, t, x_Hal)
@@ -381,8 +381,6 @@ if __name__ == "__main__":
 
     plt.legend()
     anim = animation.FuncAnimation(fig, animate, frames=nb_points, 
-                                   interval=40, repeat=False)
-    # anim.save("gg_bo_ga.gif", dpi=300, writer=animation.PillowWriter(fps=25))
+                                   interval=10, repeat=False)
+    # anim.save("simulation.gif", dpi=300)
     plt.show()
-
-    
