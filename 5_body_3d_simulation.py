@@ -1,3 +1,4 @@
+
 import numpy as np
 from scipy.constants import gravitational_constant, astronomical_unit
 import matplotlib.pyplot as plt
@@ -5,6 +6,7 @@ import time
 import math
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.animation as animation
+from datetime import datetime, timedelta
 
 class runge_kutta:
     def __init__(
@@ -278,6 +280,10 @@ if __name__ == "__main__":
     
     print(f"La simulation a pris {t2-t1} secondes à réaliser")
 
+    # Date lors de la simulation
+    # first_date = datetime.today()
+    first_date = datetime(year=1900, month=1, day=1)
+
 
     x_Hal = x_and_v_points[0][0] / astronomical_unit
     y_Hal = x_and_v_points[0][2] / astronomical_unit
@@ -307,10 +313,10 @@ if __name__ == "__main__":
     x_Ter_interp = np.interp(t_interp, t, x_Ter)
     y_Ter_interp = np.interp(t_interp, t, y_Ter)
     z_Ter_interp = np.interp(t_interp, t, z_Ter)
-    
-    
+
+
     fig, ax = plt.subplots(subplot_kw={"projection": "3d"}, figsize=(5, 5))
-    
+
 
     
     ax.scatter(0, 0, 0, color="orange", label="Soleil")
@@ -318,8 +324,8 @@ if __name__ == "__main__":
     dist_Ter_Hal = np.linalg.norm([x_Hal_interp[0]-x_Ter_interp[0], 
                                    y_Hal_interp[0]-y_Ter_interp[0], 
                                    z_Hal_interp[0]-z_Ter_interp[0]])
-    time_text = ax.text(x=-30,y=-30, z=1, s=f"Temps : 0 années\nDistance Terre-comète : {round(dist_Ter_Hal,1)} UA")
-    
+
+
     # On run deux fois la simulation, une fois pour tracer les ellipses 
     # non perturbées, et l'autre pour la dépendance temporelle. Ici, on traces 
     # les orbites non perturbées
@@ -357,7 +363,9 @@ if __name__ == "__main__":
         dist_Ter_Hal = np.linalg.norm([x_Hal_interp[i]-x_Ter_interp[i], 
                                     y_Hal_interp[i]-y_Ter_interp[i], 
                                     z_Hal_interp[i]-z_Ter_interp[i]])
-        time_text.set_text(f"Temps : {round(t_interp[i]/(365*24*3600),1)} années\nDistance Terre-comète : {round(dist_Ter_Hal,1)} UA")
+        iterative_time = first_date + timedelta(seconds=t_interp[i])
+
+        ax.set_title(f"Date : {iterative_time.strftime('%Y/%m/%d')} \nDistance Terre-comète : {round(dist_Ter_Hal,1)} UA")
         return graph_halley, graph_jupiter, graph_saturne, graph_terre
     
     
@@ -382,5 +390,5 @@ if __name__ == "__main__":
     plt.legend()
     anim = animation.FuncAnimation(fig, animate, frames=nb_points, 
                                    interval=10, repeat=False)
-    # anim.save("simulation.gif", dpi=300)
+    anim.save("simulation.gif", dpi=300)
     plt.show()
