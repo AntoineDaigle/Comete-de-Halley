@@ -263,19 +263,24 @@ if __name__ == "__main__":
     cond_init = np.array([cond_init_Hal, cond_init_Jup, cond_init_Sat, cond_init_Ter])
     masses = np.array([[2.2E14, 1.898E27, 5.683E26, 5.972E24]])
     masses_non_perturb = np.array([[0,0,0,0]])
+
+    # Setup simulation
+    a = 0
+    b = 1e9
+    N = 1e5
+    delta = 1e-7
     
     t1 = time.time()
-    t, x_and_v_points, h = runge_kutta(0, 1e9, 1E05, cond_init, masses, 
-                                       1E-07).simulation()
+    t, x_and_v_points, h = runge_kutta(a, b, N, cond_init, masses, 
+                                       delta).simulation()
     t2 = time.time()
     
     print(f"La simulation a pris {t2-t1} secondes à réaliser")
-    
-    
+
     print("Simulation des corps non perturbés")
     t1 = time.time()
-    t_non_perturb, x_and_v_points_non_perturb, h_non_perturb = runge_kutta(0, 
-                1e09, 1E05, cond_init, masses_non_perturb, 1E-07).simulation()
+    t_non_perturb, x_and_v_points_non_perturb, h_non_perturb = runge_kutta(a, 
+                b, N, cond_init, masses_non_perturb, delta).simulation()
     t2 = time.time()
     
     print(f"La simulation a pris {t2-t1} secondes à réaliser")
@@ -363,9 +368,12 @@ if __name__ == "__main__":
         dist_Ter_Hal = np.linalg.norm([x_Hal_interp[i]-x_Ter_interp[i], 
                                     y_Hal_interp[i]-y_Ter_interp[i], 
                                     z_Hal_interp[i]-z_Ter_interp[i]])
-        iterative_time = first_date + timedelta(seconds=t_interp[i])
+        
+        temps_ecoule = t_interp[i]
+        iterative_time = first_date + timedelta(seconds=temps_ecoule)
+        erreur_temporel = timedelta(seconds=(temps_ecoule * delta))
 
-        ax.set_title(f"Date : {iterative_time.strftime('%Y/%m/%d')} \nDistance Terre-comète : {round(dist_Ter_Hal,1)} UA")
+        ax.set_title(f"Date : {iterative_time.strftime('%Y/%m/%d')} \u00B1 {round(erreur_temporel.total_seconds())}s \nDistance Terre-comète : {round(dist_Ter_Hal,1)} UA")
         return graph_halley, graph_jupiter, graph_saturne, graph_terre
     
     
@@ -390,5 +398,6 @@ if __name__ == "__main__":
     plt.legend()
     anim = animation.FuncAnimation(fig, animate, frames=nb_points, 
                                    interval=10, repeat=False)
-    anim.save("simulation.gif", dpi=300)
+    # anim.save("simulation.gif", dpi=300)
     plt.show()
+ 
