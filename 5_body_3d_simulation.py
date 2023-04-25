@@ -1,12 +1,8 @@
 
 import numpy as np
 from scipy.constants import gravitational_constant, astronomical_unit
-import matplotlib.pyplot as plt
 import time
 import math
-from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.animation as animation
-from datetime import datetime, timedelta
 import pandas as pd
 
 class runge_kutta:
@@ -152,20 +148,27 @@ class runge_kutta:
 
         def rho(etat_h_p_h, etat_2h):
             eps_Hal = [abs(etat_h_p_h[0][0]-etat_2h[0][0])/30, 
-                       abs(etat_h_p_h[0][2]-etat_2h[0][2])/30, 
-                       abs(etat_h_p_h[0][4]-etat_2h[0][4])/30]
+                    abs(etat_h_p_h[0][2]-etat_2h[0][2])/30, 
+                    abs(etat_h_p_h[0][4]-etat_2h[0][4])/30]
             eps_Jup = [abs(etat_h_p_h[1][0]-etat_2h[1][0])/30, 
-                       abs(etat_h_p_h[1][2]-etat_2h[1][2])/30, 
-                       abs(etat_h_p_h[1][4]-etat_2h[1][4])/30]
+                    abs(etat_h_p_h[1][2]-etat_2h[1][2])/30, 
+                    abs(etat_h_p_h[1][4]-etat_2h[1][4])/30]
             eps_Sat = [abs(etat_h_p_h[2][0]-etat_2h[2][0])/30, 
-                       abs(etat_h_p_h[2][2]-etat_2h[2][2])/30, 
-                       abs(etat_h_p_h[2][4]-etat_2h[2][4])/30]
+                    abs(etat_h_p_h[2][2]-etat_2h[2][2])/30, 
+                    abs(etat_h_p_h[2][4]-etat_2h[2][4])/30]
             eps_Ter = [abs(etat_h_p_h[3][0]-etat_2h[3][0])/30, 
-                       abs(etat_h_p_h[3][2]-etat_2h[3][2])/30, 
-                       abs(etat_h_p_h[3][4]-etat_2h[3][4])/30]
+                    abs(etat_h_p_h[3][2]-etat_2h[3][2])/30, 
+                    abs(etat_h_p_h[3][4]-etat_2h[3][4])/30]
             eps = np.array([eps_Hal + eps_Jup + eps_Sat + eps_Ter])
-            return self.h * self.delta / np.linalg.norm(eps)
-        
+
+            if np.linalg.norm(eps) == 0:
+                print("MUKENDI")
+                return 2 * self.h
+            
+            else:
+                return self.h * self.delta / np.linalg.norm(eps)
+
+
         def h_prime(rho, h):
             return h * rho**0.25
 
@@ -227,6 +230,8 @@ class runge_kutta:
 
             # Calcul rho
             p = rho(cond_init_h_p_h, cond_init_2h)
+
+
             h_pri = h_prime(p, self.h)
 
             if p >= 1:
@@ -284,23 +289,24 @@ class runge_kutta:
 if __name__ == "__main__":
 
     # Condition initiale des corps
-    cond_init_Hal = [-1660702666376.2126, -289.2447348361545, 4572279519149.354, 796.3543408203125, -1968537695731.344, 0]
-    cond_init_Jup = [730754343678.0205, -1829.0352151828342, 108876781463.77785, 12804.924249428643, 58178889052.37484, -994.973510983785]
-    cond_init_Sat = [1031191094875.5728, 5567.873119269477, -1033620641868.5634, 5554.893439568414, 140699780841.28854, 0.0]
-    cond_init_Ter = [-138178017260.2905, 11523.23502919515, -58855274550.4014, -27629.07455587599, -11697223562.036554, 3033.9370259184307]
+    # cond_init_Hal = [208752443562., -6562., 826804313528., 2156., -180080504407., 2296.]
+    cond_init_Hal = [208752443562., -10384., 826804313528., -12985., -180080504407., 5594.]
+    cond_init_Jup = [-184411002818.46576, 14389., -762722394481., -3438., 29116469751., 1056.]
+    cond_init_Sat = [1144786454164.7534, 6034., -896149379628., 7708., 139680536731., 0.0]
+    cond_init_Ter = [111544381359., -18258., 96749779120., 21278., 6555016889., -3579.]
+
 
     cond_init = np.array([cond_init_Hal, 
                           cond_init_Jup, 
                           cond_init_Sat, 
                           cond_init_Ter])
     masses = np.array([[2.2E14, 1.898E27, 5.683E26, 5.972E24]])
-    masses_non_perturb = np.array([[0,0,0,0]])
 
     # Setup simulation
     a = 0
-    b = 1e9
-    N = 1e5
-    delta = 1e-8
+    b = 2 * 365 * 24 * 60 * 60
+    N = 10
+    delta = 1e-7
 
     d = {"a": [a],
          "b": [b],
@@ -311,15 +317,9 @@ if __name__ == "__main__":
 
     # Simulation orbite perturbé
     t1_p = time.time()
-    pert_data = runge_kutta(a, b, N, cond_init, masses, delta).simulation()
+    data = runge_kutta(a, b, N, cond_init, masses, delta).simulation()
     t2_p = time.time()
 
-    # Simulation orbite non perturbé
-    t1_np = time.time()
-    non_pert_data = runge_kutta(a, b, N, cond_init, masses_non_perturb, delta).simulation()
-    t2_np = time.time()
+    data.to_csv("data_simulation.csv", sep=",")
 
-    pert_data.to_csv("pert_data.csv", sep=",")
-    non_pert_data.to_csv("non_pert_data.csv", sep=",")
-
-    print(f"\nData saved\nSimulation perturbé: {round(t2_p-t1_p,2)} s\nSimulation non-perturbé: {round(t2_np-t1_np,2)}")
+    print(f"\nData saved\nSimulation: {round(t2_p-t1_p,2)} s")
