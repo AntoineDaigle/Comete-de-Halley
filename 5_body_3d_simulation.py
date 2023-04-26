@@ -40,10 +40,8 @@ class runge_kutta:
             np: Array contenant les nouvelles conditions initiales.
         """
         masse_soleil = 1.98840987e+30
-        masse_Hal = self.masses[0][0]
-        masse_Jup = self.masses[0][1]
-        masse_Sat = self.masses[0][2]
-        masse_Ter = self.masses[0][3]
+        masse_Hal, masse_Jup, masse_Sat, masse_Ter = self.masses
+
         r_Hal_Sol = np.sqrt(cond_ini[0][0]**2 + cond_ini[0][2]**2+ cond_ini[0][4]**2)
         r_Jup_Sol = np.sqrt(cond_ini[1][0]**2 + cond_ini[1][2]**2+ cond_ini[1][4]**2)
         r_Jup_Hal = np.sqrt((cond_ini[1][0] - cond_ini[0][0])**2 + (cond_ini[1][2] - cond_ini[0][2])**2+ (cond_ini[1][4] - cond_ini[0][4])**2)
@@ -287,27 +285,29 @@ class runge_kutta:
 
 if __name__ == "__main__":
 
-    # Condition initiale des corps
-    # cond_init_Hal = [208752443562., -10384., 826804313528., -12985., -180080504407., 5594.]
-    # cond_init_Jup = [-184411002818.46576, 14389., -762722394481., -3438., 29116469751., 1056.]
-    # cond_init_Sat = [1144786454164.7534, 6034., -896149379628., 7708., 139680536731., 0.0]
-    # cond_init_Ter = [111544381359., -18258., 96749779120., 21278., 6555016889., -3579.]
-    cond_init_Hal = [208750480796., 3182., 826796539612., -15540., -180078811225., 4936.]
-    cond_init_Jup = [-184407427672., 14535., -762707607707., -2608., 29115905274., 1237.]
-    cond_init_Sat = [1144792841350., 5371., -896036230089., 7729., 139674319195., -248.]
-    cond_init_Ter = [111575552651., -18473., 96776816033., 21102., 6556848701., -3592.]
+    # # Données de vendredi ajusté pourcentage
+    # cond_init_Hal = [-1660716839552.0, -854.2, 4572328903433.1, -310.3, -1968558437552.6, 0.0]
+    # cond_init_Jup = [730733386573.3, -1938, 108827487373.0, 13466.5, 58179568056.5, -853.7]
+    # cond_init_Sat = [1031211585298.2, 6104.4, -1033678765610.8, 6564.5, 140705140777.3, -32.4]
+    # cond_init_Ter = [-138178130378.2, 10798.7, -58738066732.8, -27370.8, -11704862309.8, 2994.3]
 
+
+    # Données de 1757 ajusté pourcentage
+    cond_init_Hal = [208750480796., 3182., 826796539612., -15540., -180078811225., 4936.]
+    cond_init_Jup = [-184407427672.5, 12435, -762707607707.7, -2231.7, 29115905274.9, 1058.4]
+    cond_init_Sat = [1144792841350.0, 5384.6, -896036230089.0, 7748.4, 139674319195.2, -249.5]
+    cond_init_Ter = [111575552652.0, -19613.5, 96776816033.1, 22404.8, 6556848701.3, -3814.3]
 
 
     cond_init = np.array([cond_init_Hal, 
                           cond_init_Jup, 
-                          cond_init_Sat, 
+                          cond_init_Sat,
                           cond_init_Ter])
-    masses = np.array([[2.2E14, 1.898E27, 5.683E26, 5.972E24]])
+    masses = [2.2E14, 1.898E27, 5.683E26, 5.9722E24]
 
     # Setup simulation
     a = 0
-    b = 3e9
+    b = 4e9
     N = 10
     delta = 1e-7
 
@@ -316,13 +316,13 @@ if __name__ == "__main__":
          "N": [N],
          "delta":[delta],}
     condition_initiale_simulation = pd.DataFrame(data=d)
-    condition_initiale_simulation.to_csv("Condition_initiale_simulation.csv", sep=",")
+    condition_initiale_simulation.to_csv("Condition_initiale_simulation_1758.csv", sep=",")
 
     # Simulation orbite perturbé
     t1_p = time.time()
     data = runge_kutta(a, b, N, cond_init, masses, delta).simulation()
     t2_p = time.time()
 
-    data.to_csv("data_simulation.csv", sep=",")
+    data.to_csv("data_simulation_1758.csv", sep=",")
 
     print(f"\nData saved\nSimulation: {round(t2_p-t1_p,2)} s")

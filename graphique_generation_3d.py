@@ -9,16 +9,11 @@ import pandas as pd
 
 
 # Load simulation data
-data = pd.read_csv("data_simulation.csv")
-
-condition_initiale = pd.read_csv("Condition_initiale_simulation.csv")
-delta = condition_initiale["delta"][0]
-
+data = pd.read_csv("data_simulation_1758.csv")
 
 # Date lors de la simulation
-# first_date = datetime.today()
+# first_date = datetime(year=2023, month=4, day=28, hour=14, minute=27)
 first_date = datetime(year=1758, month=11, day=14)
-
 
 nb_points = 500
 t = list(data["time"])
@@ -93,9 +88,8 @@ def animate(i):
     
     temps_ecoule = t_interp[i]
     iterative_time = first_date + timedelta(seconds=temps_ecoule)
-    erreur_temporel = timedelta(seconds=(temps_ecoule * delta))
 
-    ax.set_title(f"Date : {iterative_time.strftime('%Y/%m/%d')} \u00B1 {round(erreur_temporel.total_seconds())}s \nDistance Terre-comète : {round(dist_Ter_Hal,1)} UA")
+    ax.set_title(f"Date : {iterative_time.strftime('%Y/%m/%d')} \nDistance Terre-comète : {round(dist_Ter_Hal,1)} UA")
 
     return graph_halley, graph_jupiter, graph_saturne, graph_terre
 

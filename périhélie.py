@@ -6,8 +6,10 @@ from scipy.constants import astronomical_unit
 
 data = pd.read_csv("data_simulation.csv")
 
+date_initiale = datetime(year=2023, month=4, day=28, hour=14, minute=27)
+# date_initiale = datetime(year=1758, month=11, day=14)
+# date_initiale = datetime(year=1738, month=11, day=14)
 
-date_initiale = datetime(year=1758, month=11, day=14)
 norme_halley = np.sqrt(data["x_halley"]**2 + data["y_halley"]**2 + data["z_halley"]**2 )
 
 
