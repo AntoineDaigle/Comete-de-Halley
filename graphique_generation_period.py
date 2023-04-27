@@ -7,8 +7,12 @@ from scipy.signal import find_peaks
 
 
 # Load simulation data
-data = pd.read_csv("data_simulation.csv")
-condition_initiale = pd.read_csv("Condition_initiale_simulation.csv")
+# data = pd.read_csv("data_simulation_1758.csv")
+# condition_initiale = pd.read_csv("Condition_initiale_simulation_1758.csv")
+
+data = pd.read_csv("data_simulation_vendredi.csv")
+condition_initiale = pd.read_csv("Condition_initiale_simulation_vendredi.csv")
+
 delta = condition_initiale["delta"][0]
 
 
@@ -23,12 +27,13 @@ x_sat_interp = np.interp(t_interp, t, data["x_saturne"]/astronomical_unit)
 try:
     pic_ter = find_peaks(x_ter_interp)
     print("Terre", timedelta(seconds=(t[-1]-t[0]) * np.mean(np.diff(pic_ter[0]))/nb_points))
-    pic_hal = find_peaks(x_hal_interp)
-    print("Halley", timedelta(seconds=(t[-1]-t[0]) * np.mean(np.diff(pic_hal[0]))/nb_points))
+
     pic_jup = find_peaks(x_jup_interp)
     print("Jupiter", timedelta(seconds=(t[-1]-t[0]) * np.mean(np.diff(pic_jup[0]))/nb_points))
     pic_sat = find_peaks(x_sat_interp)
     print("Saturne", timedelta(seconds=(t[-1]-t[0]) * np.mean(np.diff(pic_sat[0]))/nb_points))
+    pic_hal = find_peaks(x_hal_interp)
+    print("Halley", timedelta(seconds=(t[-1]-t[0]) * np.mean(np.diff(pic_hal[0]))/nb_points))   
 except ValueError:
     print("Pas de période.")
 

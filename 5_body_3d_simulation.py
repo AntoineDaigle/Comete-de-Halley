@@ -272,7 +272,7 @@ class runge_kutta:
              "vy_terre":vypoints_Ter,
              "z_terre":zpoints_Ter,
              "vz_terre":vzpoints_Ter}
-        
+         
 
         simulation_res = pd.DataFrame(data=d)
         
@@ -292,11 +292,19 @@ if __name__ == "__main__":
     # cond_init_Ter = [-138178130378.2, 10798.7, -58738066732.8, -27370.8, -11704862309.8, 2994.3]
 
 
+    # Données de 1758 ajusté pourcentage
+    # cond_init_Hal = [208750480796., 3182., 826796539612., -15540., -180078811225., 4936.]
+    # cond_init_Jup = [-184407427672.5, 12435, -762707607707.7, -2231.7, 29115905274.9, 1058.4]
+    # cond_init_Sat = [1144792841350.0, 5384.6, -896036230089.0, 7748.4, 139674319195.2, -249.5]
+    # cond_init_Ter = [111575552652.0, -19613.5, 96776816033.1, 22404.8, 6556848701.3, -3814.3]
+
+
     # Données de 1757 ajusté pourcentage
-    cond_init_Hal = [208750480796., 3182., 826796539612., -15540., -180078811225., 4936.]
-    cond_init_Jup = [-184407427672.5, 12435, -762707607707.7, -2231.7, 29115905274.9, 1058.4]
-    cond_init_Sat = [1144792841350.0, 5384.6, -896036230089.0, 7748.4, 139674319195.2, -249.5]
-    cond_init_Ter = [111575552652.0, -19613.5, 96776816033.1, 22404.8, 6556848701.3, -3814.3]
+    cond_init_Hal = [119549546919.3, 3693.3, 1397721769571.7, -10170.3, -385226802995.1, 3846.7]
+    cond_init_Jup =[-664066609806.5, 7203, -460819618034.7, -10015.8, -31279539245.5, 965.6]
+    cond_init_Sat = [848266168031.8, 7291.8, -1204664988015.4, 5421.4, 140591240949.3, -22.4]
+    cond_init_Ter = [-76230889872.9, 24979.4, -131286148511.2, -14808.3, -537805066.2, 3462.8]
+
 
 
     cond_init = np.array([cond_init_Hal, 
@@ -316,13 +324,13 @@ if __name__ == "__main__":
          "N": [N],
          "delta":[delta],}
     condition_initiale_simulation = pd.DataFrame(data=d)
-    condition_initiale_simulation.to_csv("Condition_initiale_simulation_1758.csv", sep=",")
+    condition_initiale_simulation.to_csv("Condition_initiale_simulation_vendredi.csv", sep=",")
 
     # Simulation orbite perturbé
     t1_p = time.time()
     data = runge_kutta(a, b, N, cond_init, masses, delta).simulation()
     t2_p = time.time()
 
-    data.to_csv("data_simulation_1758.csv", sep=",")
+    data.to_csv("data_simulation_1757.csv", sep=",")
 
     print(f"\nData saved\nSimulation: {round(t2_p-t1_p,2)} s")

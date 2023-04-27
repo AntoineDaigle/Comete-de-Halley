@@ -9,13 +9,14 @@ import pandas as pd
 
 
 # Load simulation data
-data = pd.read_csv("data_simulation_1758.csv")
+data = pd.read_csv("data_simulation_1757.csv")
 
 # Date lors de la simulation
 # first_date = datetime(year=2023, month=4, day=28, hour=14, minute=27)
-first_date = datetime(year=1758, month=11, day=14)
+first_date = datetime(year=1757, month=6, day=1)
+# first_date = datetime(year=1758, month=11, day=14)
 
-nb_points = 500
+nb_points = 250
 t = list(data["time"])
 t_interp = np.linspace(t[0], t[-1], nb_points)
 
@@ -68,6 +69,11 @@ ax.plot(data["x_terre"] / astronomical_unit,
         'k-', alpha=0.3)
 
 
+ax.set_xlabel("X [UA]")
+ax.set_ylabel("Y [UA]")
+ax.set_zlabel("Z [UA]")
+
+
 
 def animate(i):
     graph_halley._offsets3d = ([x_Hal_interp[i]], 
@@ -90,7 +96,8 @@ def animate(i):
     iterative_time = first_date + timedelta(seconds=temps_ecoule)
 
     ax.set_title(f"Date : {iterative_time.strftime('%Y/%m/%d')} \nDistance Terre-comète : {round(dist_Ter_Hal,1)} UA")
-
+    # plt.savefig(f"Figure_vendredi/number-{i}.png", dpi=400)
+    # print(i)
     return graph_halley, graph_jupiter, graph_saturne, graph_terre
 
 
@@ -111,11 +118,12 @@ graph_terre = ax.scatter(data["x_terre"][0]/ astronomical_unit,
                             data["z_terre"][0]/ astronomical_unit,
                             "X", color='k', label="Terre")
 
-
+ax.view_init(elev=30, azim=30)
 plt.legend()
 anim = animation.FuncAnimation(fig, animate, frames=nb_points, 
-                                interval=10, repeat=False)
+                                interval=1, blit=True, repeat=False)
 # anim.save("simulation.gif", dpi=300)
+
 plt.show()
 
 
