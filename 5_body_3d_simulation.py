@@ -4,7 +4,7 @@ from scipy.constants import gravitational_constant, astronomical_unit
 import time
 import math
 import pandas as pd
-
+from tqdm import tqdm
 class runge_kutta:
     def __init__(
             self, 
@@ -172,9 +172,9 @@ class runge_kutta:
 
         last_percent_completed = 0
         while tpoints[-1] < self.b:
-            if math.floor(tpoints[-1]/self.b * 100) > last_percent_completed:
-                last_percent_completed = math.floor(tpoints[-1]/self.b * 100)
-                print(f"{last_percent_completed} % complété")
+            # if math.floor(tpoints[-1]/self.b * 100) > last_percent_completed:
+            #     last_percent_completed = math.floor(tpoints[-1]/self.b * 100)
+            #     print(f"{last_percent_completed} % complété")
 
 
             xpoints_Hal.append(self.cond_init[0][0])
@@ -286,10 +286,10 @@ class runge_kutta:
 if __name__ == "__main__":
 
     # # Données de vendredi ajusté pourcentage
-    # cond_init_Hal = [-1660716839552.0, -854.2, 4572328903433.1, -310.3, -1968558437552.6, 0.0]
-    # cond_init_Jup = [730733386573.3, -1938, 108827487373.0, 13466.5, 58179568056.5, -853.7]
-    # cond_init_Sat = [1031211585298.2, 6104.4, -1033678765610.8, 6564.5, 140705140777.3, -32.4]
-    # cond_init_Ter = [-138178130378.2, 10798.7, -58738066732.8, -27370.8, -11704862309.8, 2994.3]
+    cond_init_Hal = [-1660716839552.0, -854.2, 4572328903433.1, -310.3, -1968558437552.6, 0.0]
+    cond_init_Jup = [730733386573.3, -1938, 108827487373.0, 13466.5, 58179568056.5, -853.7]
+    cond_init_Sat = [1031211585298.2, 6104.4, -1033678765610.8, 6564.5, 140705140777.3, -32.4]
+    cond_init_Ter = [-138178130378.2, 10798.7, -58738066732.8, -27370.8, -11704862309.8, 2994.3]
 
 
     # Données de 1758 ajusté pourcentage
@@ -300,10 +300,10 @@ if __name__ == "__main__":
 
 
     # Données de 1757 ajusté pourcentage
-    cond_init_Hal = [119549546919.3, 3693.3, 1397721769571.7, -10170.3, -385226802995.1, 3846.7]
-    cond_init_Jup =[-664066609806.5, 7203, -460819618034.7, -10015.8, -31279539245.5, 965.6]
-    cond_init_Sat = [848266168031.8, 7291.8, -1204664988015.4, 5421.4, 140591240949.3, -22.4]
-    cond_init_Ter = [-76230889872.9, 24979.4, -131286148511.2, -14808.3, -537805066.2, 3462.8]
+    # cond_init_Hal = [119549546919.3, 3693.3, 1397721769571.7, -10170.3, -385226802995.1, 3846.7]
+    # cond_init_Jup =[-664066609806.5, 7203, -460819618034.7, -10015.8, -31279539245.5, 965.6]
+    # cond_init_Sat = [848266168031.8, 7291.8, -1204664988015.4, 5421.4, 140591240949.3, -22.4]
+    # cond_init_Ter = [-76230889872.9, 24979.4, -131286148511.2, -14808.3, -537805066.2, 3462.8]
 
 
 
@@ -311,7 +311,9 @@ if __name__ == "__main__":
                           cond_init_Jup, 
                           cond_init_Sat,
                           cond_init_Ter])
-    masses = [2.2E14, 1.898E27, 5.683E26, 5.9722E24]
+    # masses = [2.2E14, 1.898E27, 5.683E26, 5.9722E24]
+    # masse_Hal, masse_Jup, masse_Sat, masse_Ter = self.masses
+    masses = [2.2E14, 0, 0, 0]
 
     # Setup simulation
     a = 0
@@ -325,12 +327,15 @@ if __name__ == "__main__":
          "delta":[delta],}
     condition_initiale_simulation = pd.DataFrame(data=d)
     condition_initiale_simulation.to_csv("Condition_initiale_simulation_vendredi.csv", sep=",")
-
+    time_liste = []
     # Simulation orbite perturbé
-    t1_p = time.time()
-    data = runge_kutta(a, b, N, cond_init, masses, delta).simulation()
-    t2_p = time.time()
+    for j in tqdm(range(30)):
+        t1_p = time.time()
+        data = runge_kutta(a, b, N, cond_init, masses, delta).simulation()
+        t2_p = time.time()
+        time_liste.append(t2_p-t1_p)
+    print(time_liste)
 
-    data.to_csv("data_simulation_1757.csv", sep=",")
+    data.to_csv("data_simulation_impact_rien.csv", sep=",")
 
     print(f"\nData saved\nSimulation: {round(t2_p-t1_p,2)} s")

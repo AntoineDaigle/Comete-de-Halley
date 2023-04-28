@@ -7,11 +7,12 @@ from scipy.signal import find_peaks
 
 
 # Load simulation data
-# data = pd.read_csv("data_simulation_1758.csv")
-# condition_initiale = pd.read_csv("Condition_initiale_simulation_1758.csv")
-
-data = pd.read_csv("data_simulation_vendredi.csv")
+# data = pd.read_csv("data_simulation_vendredi.csv")
+data = pd.read_csv("data_simulation_impact_saturne.csv")
 condition_initiale = pd.read_csv("Condition_initiale_simulation_vendredi.csv")
+
+# data = pd.read_csv("data_simulation_vendredi.csv")
+# condition_initiale = pd.read_csv("Condition_initiale_simulation_vendredi.csv")
 
 delta = condition_initiale["delta"][0]
 
@@ -37,10 +38,19 @@ try:
 except ValueError:
     print("Pas de période.")
 
-plt.plot(data["time"], data["x_terre"], c="k", label="Terre")
-plt.plot(data["time"], data["x_jupiter"], c="red", label="Jupiter")
-plt.plot(data["time"], data["x_saturne"], c="blue", label="Saturne")
-plt.plot(data["time"], data["x_halley"], c="green", label="Halley")
-plt.legend()
+first_date = datetime(year=1758, month=11, day=14)
+temps = [first_date + timedelta(seconds=i) for i in data["time"]]
 
+
+plt.figure(figsize=(8,3))
+plt.plot(temps, data["x_terre"]/astronomical_unit, c="k", label="Terre")
+plt.plot(temps, data["x_jupiter"]/astronomical_unit, "r:", label="Jupiter")
+plt.plot(temps, data["x_saturne"]/astronomical_unit, "b--", label="Saturne")
+plt.plot(temps, data["x_halley"]/astronomical_unit, "g-.", label="Halley")
+plt.ylabel("Position [AU]")
+plt.xlabel("Temps [YYYY]")
+plt.minorticks_on()
+plt.legend()
+plt.tight_layout()
+# plt.savefig("période_2023.pdf")
 plt.show()

@@ -9,12 +9,12 @@ import pandas as pd
 
 
 # Load simulation data
-data = pd.read_csv("data_simulation_1757.csv")
+data = pd.read_csv("data_simulation_1758.csv")
 
 # Date lors de la simulation
 # first_date = datetime(year=2023, month=4, day=28, hour=14, minute=27)
-first_date = datetime(year=1757, month=6, day=1)
-# first_date = datetime(year=1758, month=11, day=14)
+# first_date = datetime(year=1757, month=6, day=1)
+first_date = datetime(year=1758, month=11, day=14)
 
 nb_points = 250
 t = list(data["time"])
@@ -121,7 +121,7 @@ graph_terre = ax.scatter(data["x_terre"][0]/ astronomical_unit,
 ax.view_init(elev=30, azim=30)
 plt.legend()
 anim = animation.FuncAnimation(fig, animate, frames=nb_points, 
-                                interval=1, blit=True, repeat=False)
+                                interval=10, repeat=False)
 # anim.save("simulation.gif", dpi=300)
 
 plt.show()
