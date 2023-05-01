@@ -8,11 +8,19 @@ from scipy.signal import find_peaks
 
 # Load simulation data
 # data = pd.read_csv("data_simulation_vendredi.csv")
-data = pd.read_csv("data_simulation_impact_saturne.csv")
-condition_initiale = pd.read_csv("Condition_initiale_simulation_vendredi.csv")
+# data = pd.read_csv("data_simulation_impact_saturne.csv")
+# condition_initiale = pd.read_csv("Condition_initiale_simulation_vendredi.csv")
 
 # data = pd.read_csv("data_simulation_vendredi.csv")
 # condition_initiale = pd.read_csv("Condition_initiale_simulation_vendredi.csv")
+
+
+# data = pd.read_csv("data_simulation_JPL-2023.csv")
+# condition_initiale = pd.read_csv("Condition_initiale_simulation_vendredi.csv")
+
+
+data = pd.read_csv("data_simulation_JPL-1758.csv")
+condition_initiale = pd.read_csv("Condition_initiale_simulation_vendredi.csv")
 
 delta = condition_initiale["delta"][0]
 
@@ -37,6 +45,9 @@ try:
     print("Halley", timedelta(seconds=(t[-1]-t[0]) * np.mean(np.diff(pic_hal[0]))/nb_points))   
 except ValueError:
     print("Pas de période.")
+
+# first_date = datetime(year=2023, month=4, day=28)
+# temps = [first_date + timedelta(seconds=i) for i in data["time"]]
 
 first_date = datetime(year=1758, month=11, day=14)
 temps = [first_date + timedelta(seconds=i) for i in data["time"]]

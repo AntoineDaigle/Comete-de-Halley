@@ -9,11 +9,18 @@ from scipy.constants import astronomical_unit
 # date_initiale = datetime(year=1757, month=6, day=1)
 
 # data = pd.read_csv("data_simulation_vendredi.csv")
-data = pd.read_csv("data_simulation_impact_rien.csv")
-date_initiale = datetime(year=2023, month=4, day=28, hour=14, minute=27)
+# data = pd.read_csv("data_simulation_impact_rien.csv")
+# date_initiale = datetime(year=2023, month=4, day=28, hour=14, minute=27)
 
 # data = pd.read_csv("data_simulation_1758.csv")
 # date_initiale = datetime(year=1758, month=11, day=14)
+
+# data = pd.read_csv("data_simulation_JPL-2023.csv")
+# date_initiale = datetime(year=2023, month=4, day=28)
+
+data = pd.read_csv("data_simulation_JPL-1758.csv")
+date_initiale = datetime(year=1758, month=11, day=14)
+
 
 norme_halley = np.sqrt(data["x_halley"]**2 + data["y_halley"]**2 + data["z_halley"]**2 )
 
